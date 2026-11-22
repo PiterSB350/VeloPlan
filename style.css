@@ -32,3 +32,5 @@ canvas{width:100%;height:auto;background:#fafbfc;border:1px solid #e1e5ea;border
 .library li{padding:.6rem 0;border-bottom:1px solid #eef1f6;display:flex;justify-content:space-between;gap:.5rem}
 .library small{display:block;color:var(--muted)}
 .muted{color:var(--muted)}
+.legend{list-style:none;display:flex;gap:1rem;flex-wrap:wrap;padding:0;margin:.5rem 0 0;font-size:.9rem;color:var(--muted)}
+.legend i{display:inline-block;width:.9rem;height:.9rem;border-radius:3px;margin-right:.35rem;vertical-align:-2px}
