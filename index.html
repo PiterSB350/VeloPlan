@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VeloPlan – edytor treningów</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <h1>VeloPlan <span>edytor treningów (UC9)</span></h1>
+    <label class="ftp">Twoje FTP (W)
+      <input type="number" id="ftp" min="50" max="600" value="250">
+    </label>
+  </header>
+
+  <main>
+    <section class="card" aria-labelledby="h-edit">
+      <h2 id="h-edit">Nowy trening</h2>
+      <form id="workout-form" novalidate>
+        <label>Nazwa treningu
+          <input type="text" id="name" maxlength="60" placeholder="np. Interwały 4×5 min">
+          <small class="err" id="err-name"></small>
+        </label>
+
+        <h3>Dodaj interwał</h3>
+        <div class="row">
+          <label>Czas (min)
+            <input type="number" id="dur" min="0.5" max="240" step="0.5" value="5">
+          </label>
+          <label>Moc (% FTP)
+            <input type="number" id="pct" min="20" max="200" value="90">
+          </label>
+          <label>Kadencja (rpm, opcj.)
+            <input type="number" id="cad" min="40" max="140" placeholder="–">
+          </label>
+          <button type="button" id="add" class="btn">Dodaj interwał</button>
+        </div>
+        <small class="err" id="err-int"></small>
+
+        <ol id="intervals" class="intervals" aria-label="Lista interwałów"></ol>
+
+        <div class="profile">
+          <canvas id="profile" width="720" height="180" aria-label="Profil treningu"></canvas>
+          <p id="summary" class="summary">Brak interwałów.</p>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn primary">Zapisz trening</button>
+          <button type="button" id="clear" class="btn">Wyczyść</button>
+        </div>
+        <p id="msg" class="msg" role="status"></p>
+      </form>
+    </section>
+
+    <section class="card" aria-labelledby="h-lib">
+      <h2 id="h-lib">Biblioteka treningów</h2>
+      <p id="empty" class="muted">Brak zapisanych treningów.</p>
+      <ul id="library" class="library"></ul>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
