@@ -49,21 +49,39 @@ function render() {
   drawProfile();
 }
 
+const ZONES = [
+  { max: 60, color: "#74c0fc" }, { max: 90, color: "#69db7c" }, { max: 105, color: "#ffd43b" },
+  { max: 120, color: "#ff922b" }, { max: Infinity, color: "#fa5252" },
+];
+const zoneColor = (pct) => ZONES.find((z) => pct < z.max).color;
+
 function drawProfile() {
-  const c = $("profile"), g = c.getContext("2d"), W = c.width, H = c.height;
+  const c = $("profile"), g = c.getContext("2d"), W = c.width, H = c.height, AX = 22; // AX = wysokość osi czasu
   g.clearRect(0, 0, W, H);
   const total = intervals.reduce((a, b) => a + b.dur, 0);
   if (!total) return;
   const maxPct = Math.max(120, ...intervals.map((i) => i.pct));
+  const plotH = H - AX - 18;
   let x = 0;
   g.font = "12px Calibri, Arial"; g.textBaseline = "top";
   intervals.forEach((iv) => {
-    const w = (iv.dur / total) * W, h = (iv.pct / maxPct) * (H - 18);
-    g.fillStyle = iv.pct < 60 ? "#74c0fc" : iv.pct < 90 ? "#69db7c" : iv.pct < 105 ? "#ffd43b" : iv.pct < 120 ? "#ff922b" : "#fa5252";
-    g.fillRect(x + 1, H - h, Math.max(w - 2, 1), h);
-    if (w > 46) { g.fillStyle = "#1f2933"; g.fillText(watts(iv.pct) + " W", x + 5, H - h + 4); }
+    const w = (iv.dur / total) * W, h = (iv.pct / maxPct) * plotH;
+    g.fillStyle = zoneColor(iv.pct);
+    g.fillRect(x + 1, H - AX - h, Math.max(w - 2, 1), h);
+    if (w > 46) { g.fillStyle = "#1f2933"; g.fillText(watts(iv.pct) + " W", x + 5, H - AX - h + 4); }
     x += w;
   });
+  // oś czasu: podziałka co 5, 10, 15, 30 lub 60 min (zależnie od długości treningu)
+  const step = [5, 10, 15, 30, 60].find((s) => total / s <= 10) || 60;
+  g.strokeStyle = "#9aa5b1"; g.fillStyle = "#5f6b7a"; g.lineWidth = 1;
+  g.beginPath(); g.moveTo(0, H - AX + 0.5); g.lineTo(W, H - AX + 0.5); g.stroke();
+  for (let t = 0; t <= total; t += step) {
+    const tx = Math.min((t / total) * W, W - 1);
+    g.beginPath(); g.moveTo(tx + 0.5, H - AX); g.lineTo(tx + 0.5, H - AX + 5); g.stroke();
+    g.textAlign = t === 0 ? "left" : "center";
+    g.fillText(t + " min", Math.min(Math.max(tx, 14), W - 22), H - AX + 7);
+  }
+  g.textAlign = "left";
 }
 
 function getLib() {
